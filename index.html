@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecuaciones bicuadradas – 4º ESO · IES San José</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh}
+header{background:#534AB7;color:#fff;padding:1rem 1.5rem}
+header h1{font-size:17px;font-weight:600}
+header p{font-size:12px;opacity:.75;margin-top:2px}
+.container{max-width:740px;margin:0 auto;padding:1.5rem 1rem}
+.main-nav{display:flex;gap:4px;margin-bottom:1.5rem;background:#e8e6e0;border-radius:12px;padding:4px}
+.main-btn{flex:1;padding:10px 6px;border:none;background:transparent;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:#666;transition:all .2s}
+.main-btn.active{background:#fff;color:#1a1a1a;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.section{display:none}.section.active{display:block}
+.card{background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.formula-box{background:#EEEDFE;border:1px solid #AFA9EC;border-radius:8px;padding:.6rem 1rem;text-align:center;margin:1rem 0;color:#3C3489}
+.formula-sub{font-size:12px;color:#534AB7;margin-top:2px}
+.case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.case-card{border-radius:8px;padding:1rem .6rem;text-align:center;border:1px solid}
+.case-card.dos{background:#EAF3DE;border-color:#97C459}
+.case-card.uno{background:#FAEEDA;border-color:#EF9F27}
+.case-card.cero{background:#FCEBEB;border-color:#F09595}
+.case-title{font-size:12px;font-weight:700;margin-bottom:4px}
+.case-title.dos{color:#27500A}.case-title.uno{color:#633806}.case-title.cero{color:#791F1F}
+.case-cond{margin:6px 0}
+.case-desc{font-size:12px;color:#555}
+.step-list{margin:.75rem 0;display:flex;flex-direction:column;gap:9px}
+.step{display:flex;gap:10px;align-items:flex-start}
+.step-num{width:24px;height:24px;border-radius:50%;background:#EEEDFE;color:#3C3489;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
+.step-text{font-size:14px;line-height:1.7;min-width:0;flex:1}
+h2{font-size:17px;font-weight:600;margin-bottom:8px}
+h3{font-size:14px;font-weight:700;margin:14px 0 4px;color:#3C3489}
+p{font-size:14px;line-height:1.7}
+ul.lista{margin:6px 0 0 20px;font-size:14px;line-height:1.7}
+.example-box{background:#EEEDFE;border-radius:8px;padding:10px 14px;margin-top:10px}
+.example-box p{font-size:13px;color:#534AB7}
+.aviso{background:#FAEEDA;border:1px solid #EF9F27;border-radius:8px;padding:8px 12px;margin-top:10px;font-size:13px;color:#633806;line-height:1.6}
+.hoja{background:#fffdf6;border:1px solid #e3dcc6;border-left:3px solid #e8a0a0;border-radius:6px;padding:.4rem 1rem;margin-top:10px}
+/* KaTeX */
+.katex{font-size:1.1em}
+.katex-display{margin:.55em 0;overflow-x:auto;overflow-y:hidden;padding:3px 0}
+.katex-display>.katex{font-size:1.18em}
+/* calculadora */
+.inputs-row{display:flex;gap:8px;margin:1rem 0 .5rem;align-items:flex-end;flex-wrap:wrap}
+.inp-group{flex:1;min-width:55px}
+.inp-group label{display:block;font-size:12px;color:#666;margin-bottom:4px;font-weight:700}
+.inp-group input{width:100%;padding:9px;border:1px solid #ccc;border-radius:8px;font-size:18px;text-align:center;background:#fff}
+.calc-btn{padding:10px 20px;background:#534AB7;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.calc-btn:hover{background:#3C3489}
+.prev{min-height:58px}
+.libro-lbl{font-size:12px;color:#666;margin-top:6px}
+.libro{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.libro button{border:1px solid #e0ddd5;background:#f5f4f0;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:13px}
+.libro button:hover{border-color:#7F77DD;background:#EEEDFE}
+.err{color:#A32D2D;font-weight:600;font-size:14px}
+.sol-step{border-left:3px solid #AFA9EC;padding:4px 0 4px 12px;margin:12px 0}
+.sol-step .t{font-size:12px;font-weight:700;color:#534AB7;letter-spacing:.2px}
+.sol-step.final{border-left-color:#97C459}
+.sol-step.final .t{color:#3B6D11}
+.sol-step.vacio{border-left-color:#F09595}
+.sol-step.vacio .t{color:#A32D2D}
+.nosol{font-size:13px;color:#A32D2D}
+canvas{width:100%;height:auto;border:1px solid #e0ddd5;border-radius:10px;background:#fff;display:block;margin-top:8px}
+/* ejercicios */
+.level-nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:1rem}
+.level-btn{padding:10px 4px;border:1px solid #e0ddd5;border-radius:10px;background:#fff;cursor:pointer;text-align:center;transition:all .2s}
+.level-btn:hover{border-color:#7F77DD}
+.level-btn.active{background:#534AB7;border-color:#534AB7;color:#fff}
+.lv-icon{font-size:18px;display:block;margin-bottom:2px}
+.lv-name{font-size:12px;font-weight:600;display:block}
+.lv-sub{font-size:10px;opacity:.7;display:block}
+.level-desc-bar{background:#fff;border:1px solid #e0ddd5;border-radius:8px;padding:.6rem 1rem;font-size:13px;color:#555;margin-bottom:.75rem;line-height:1.6}
+.score-bar{background:#fff;border:1px solid #e0ddd5;border-radius:10px;padding:8px 1rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:8px}
+.score-txt{font-size:13px;color:#666}
+.score-val{font-size:16px;font-weight:700;color:#534AB7}
+.reset-btn{padding:4px 12px;font-size:12px;border:1px solid #ccc;border-radius:8px;background:transparent;cursor:pointer;color:#666}
+.exs{display:flex;flex-direction:column;gap:12px}
+.ex-card{background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1.25rem}
+.ex-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.ex-num{font-size:11px;color:#999;font-weight:600;letter-spacing:.3px}
+.ex-q{font-size:14px;line-height:1.7}
+.ex-label{font-size:13px;color:#666;margin-top:8px}
+.ex-opts{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+.opt-btn{padding:7px 14px;border-radius:8px;border:1px solid #ccc;background:#f5f4f0;font-size:13px;cursor:pointer;transition:all .15s;font-weight:500;color:#1a1a1a}
+.opt-btn:hover{border-color:#7F77DD;color:#3C3489;background:#EEEDFE}
+.opt-btn.correct{background:#EAF3DE;border-color:#639922;color:#27500A;pointer-events:none}
+.opt-btn.wrong{background:#FCEBEB;border-color:#E24B4A;color:#791F1F;pointer-events:none}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-ok{background:#EAF3DE;color:#27500A}.badge-fail{background:#FCEBEB;color:#791F1F}
+.paso{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;font-size:14px}
+.paso .pl{font-size:12px;font-weight:700;color:#534AB7;min-width:52px}
+.paso input{width:78px;padding:6px 8px;border:1px solid #ccc;border-radius:8px;font-size:16px;text-align:center}
+.paso input.w{width:210px;text-align:left}
+.paso input.ok{background:#EAF3DE;border-color:#639922}
+.paso input.bad{background:#FCEBEB;border-color:#E24B4A}
+.paso input:disabled{color:#1a1a1a}
+.muted{font-size:12px;color:#888}
+.ex-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.chk-btn{padding:7px 16px;background:#534AB7;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.chk-btn:hover{background:#3C3489}
+.ex-feedback{margin-top:10px;font-size:13px;padding:8px 12px;border-radius:8px;line-height:1.7}
+.ex-feedback.ok{background:#EAF3DE;color:#27500A}
+.ex-feedback.fail{background:#FCEBEB;color:#791F1F}
+.hint-btn{background:none;border:none;font-size:12px;color:#534AB7;cursor:pointer;text-decoration:underline;padding:0}
+.hint-box{font-size:13px;background:#EEEDFE;color:#3C3489;border-radius:8px;padding:6px 10px;margin-top:6px;display:none;line-height:1.7}
+.hint-box.show{display:block}
+.sol-box{display:none;margin-top:8px;border-top:1px dashed #e0ddd5;padding-top:4px}
+.sol-box.show{display:block}
+.finished-banner{background:linear-gradient(135deg,#EAF3DE,#FAEEDA);border:1px solid #97C459;border-radius:12px;padding:1.25rem;text-align:center;margin-bottom:1rem}
+.finished-banner h3{font-size:16px;margin:0 0 4px;color:#27500A}
+.finished-banner p{font-size:14px;color:#3B6D11}
+footer{text-align:center;font-size:11px;color:#999;padding:0 1rem 1.5rem}
+@media(max-width:500px){
+  .case-grid{grid-template-columns:1fr}
+  .level-nav{grid-template-columns:repeat(2,1fr)}
+  .inputs-row{flex-direction:column;align-items:stretch}
+  .paso input.w{width:100%}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Ecuaciones bicuadradas</h1>
+  <p>4º ESO · Matemáticas B · IES San José (Badajoz) · Cristina Ramos García</p>
+</header>
+<div class="container">
+
+<div class="main-nav">
+  <button class="main-btn active" onclick="switchMain('teoria',this)">📖 Teoría</button>
+  <button class="main-btn" onclick="switchMain('calc',this)">🧮 Calculadora</button>
+  <button class="main-btn" onclick="switchMain('ejercicios',this)">✏️ Ejercicios</button>
+</div>
+
+<!-- ===================== TEORÍA ===================== -->
+<div id="teoria" class="section active">
+  <div class="card">
+    <h2>¿Qué es una ecuación bicuadrada?</h2>
+    <p>Es una ecuación de 4.º grado <strong>sin términos de grado impar</strong>: solo tiene <span class="m">x^4</span>, <span class="m">x^2</span> y número.</p>
+    <div class="formula-box">
+      <div class="md">ax^4 + bx^2 + c = 0</div>
+      <div class="formula-sub">donde a ≠ 0</div>
+    </div>
+    <div class="step-list">
+      <div class="step"><div class="step-num">✓</div><div class="step-text"><span class="m">x^4 - 5x^2 + 4 = 0</span> &nbsp;es bicuadrada (completa).</div></div>
+      <div class="step"><div class="step-num">✓</div><div class="step-text"><span class="m">2x^4 - 32 = 0</span> &nbsp;también: le falta el término en <span class="m">x^2</span> (<span class="m">b = 0</span>).</div></div>
+      <div class="step"><div class="step-num">✓</div><div class="step-text"><span class="m">x^4 - 25x^2 = 0</span> &nbsp;también: le falta el número (<span class="m">c = 0</span>).</div></div>
+      <div class="step"><div class="step-num">✗</div><div class="step-text"><span class="m">x^4 + x^3 - 2 = 0</span> &nbsp;no lo es: tiene <span class="m">x^3</span>.</div></div>
+      <div class="step"><div class="step-num">✗</div><div class="step-text"><span class="m">x^4 - 3x + 1 = 0</span> &nbsp;no lo es: tiene <span class="m">x</span>.</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Cómo se resuelve: 3 pasos</h2>
+    <div class="step-list">
+      <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Cambio de variable.</strong> Llamamos <span class="m">x^2 = z</span>, y entonces <span class="m">x^4 = z^2</span>. La ecuación se convierte en una de segundo grado:
+        <div class="md">az^2 + bz + c = 0</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Resolvemos la ecuación en z</strong> con la fórmula de siempre:
+        <div class="md">z = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a}</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Deshacemos el cambio.</strong> Como <span class="m">x^2 = z</span>, de cada valor de z sacamos
+        <div class="md">x = \pm\sqrt{z}</div>
+        Las soluciones son las <strong>x</strong>, no las z.</div></div>
+    </div>
+    <div class="aviso">La ecuación en z se resuelve <strong>exactamente igual</strong> que una de segundo grado. Lo único nuevo es el último paso: hacer la raíz y poner el <span class="m">\pm</span>.</div>
+  </div>
+
+  <div class="card">
+    <h2>Ejemplo resuelto (así se escribe en el examen)</h2>
+    <p>Es el ejemplo del libro: resolver <span class="m">x^4 - 13x^2 + 36 = 0</span>.</p>
+    <div class="hoja">
+      <div class="md">x^4 - 13x^2 + 36 = 0 \quad\xrightarrow{\;x^2 \,=\, z\;}\quad z^2 - 13z + 36 = 0</div>
+      <div class="md">z = \dfrac{13 \pm \sqrt{169 - 144}}{2} = \dfrac{13 \pm 5}{2}\;\left\{\begin{array}{l} z = 9 \;\rightarrow\; x = \pm 3 \\[6pt] z = 4 \;\rightarrow\; x = \pm 2 \end{array}\right.</div>
+      <div class="md">\text{Soluciones: } \; x_1 = 3, \quad x_2 = -3, \quad x_3 = 2, \quad x_4 = -2</div>
+    </div>
+    <h3>En el examen, que no falte</h3>
+    <ul class="lista">
+      <li>El cambio <span class="m">x^2 = z</span> escrito y la ecuación en z.</li>
+      <li>La fórmula con los números sustituidos, no solo el resultado.</li>
+      <li>Los dos valores de z y, de cada uno, sus valores de x.</li>
+      <li>Al final, la frase «Soluciones: <span class="m">x_1 = \dots</span>» con todas.</li>
+      <li>Si sobra tiempo, comprobar una solución sustituyendo en la ecuación del principio.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>¿Cuántas soluciones salen?</h2>
+    <p>Depende del signo de cada valor de z:</p>
+    <div class="case-grid">
+      <div class="case-card dos"><div class="case-title dos">z positiva</div><div class="case-cond"><span class="m">x = \pm\sqrt{z}</span></div><div class="case-desc"><strong>2 soluciones</strong><br><span class="m">z = 16 \rightarrow x = \pm 4</span></div></div>
+      <div class="case-card uno"><div class="case-title uno">z igual a cero</div><div class="case-cond"><span class="m">x = 0</span></div><div class="case-desc"><strong>1 solución</strong><br><span class="m">x^2 = 0 \rightarrow x = 0</span></div></div>
+      <div class="case-card cero"><div class="case-title cero">z negativa</div><div class="case-cond"><span class="m">x^2 = -4</span></div><div class="case-desc"><strong>Ninguna</strong>: ningún número al cuadrado da negativo</div></div>
+    </div>
+    <p>En total, una bicuadrada tiene <strong>como máximo 4 soluciones</strong> (puede tener 4, 3, 2, 1 o ninguna) y salen <strong>por parejas de opuestos</strong>: <span class="m">3</span> y <span class="m">-3</span>. Si te sale <span class="m">3</span> sin su <span class="m">-3</span>, algo has hecho mal.</p>
+    <p style="margin-top:6px">Y si <span class="m">\Delta = b^2 - 4ac &lt; 0</span>, no hay valores de z, así que la bicuadrada no tiene solución.</p>
+  </div>
+
+  <div class="card">
+    <h2>Bicuadradas incompletas</h2>
+    <h3>Falta el término en <span class="m">x^2</span> &nbsp;(b = 0): se despeja</h3>
+    <div class="md">x^4 - 16 = 0 \;\Rightarrow\; z^2 = 16 \;\Rightarrow\; z = \pm 4 \;\left\{\begin{array}{l} z = 4 \;\rightarrow\; x = \pm 2 \\[6pt] z = -4 \;\rightarrow\; \text{no da solución} \end{array}\right.</div>
+    <h3>Falta el número &nbsp;(c = 0): factor común</h3>
+    <div class="md">x^4 - 25x^2 = 0 \;\Rightarrow\; x^2\,(x^2 - 25) = 0 \;\left\{\begin{array}{l} x^2 = 0 \;\rightarrow\; x = 0 \\[6pt] x^2 = 25 \;\rightarrow\; x = \pm 5 \end{array}\right.</div>
+    <div class="aviso">No dividas entre <span class="m">x^2</span>: perderías la solución <span class="m">x = 0</span>.</div>
+  </div>
+
+  <div class="card">
+    <h2>Errores que más se repiten</h2>
+    <div class="step-list">
+      <div class="step"><div class="step-num">1</div><div class="step-text">Dar los valores de z como soluciones finales. Falta deshacer el cambio.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">Olvidar el <span class="m">\pm</span>: si <span class="m">x^2 = 9</span>, entonces <span class="m">x = 3</span> <strong>y</strong> <span class="m">x = -3</span>.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">Hacer la raíz de una z negativa. Esa z se descarta.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-text">Equivocarse con <span class="m">-b</span>: si <span class="m">b = -13</span>, entonces <span class="m">-b = 13</span>.</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-text">No igualar a 0 antes de empezar: primero se pasa todo al primer miembro.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CALCULADORA ===================== -->
+<div id="calc" class="section">
+  <div class="card">
+    <h2>Calculadora paso a paso</h2>
+    <p style="color:#666;font-size:13px">Escribe los coeficientes de <span class="m">ax^4 + bx^2 + c = 0</span> y verás la resolución completa, como en el cuaderno.</p>
+    <div class="inputs-row">
+      <div class="inp-group"><label>a</label><input type="number" id="ia" value="1" step="1"></div>
+      <div class="inp-group"><label>b</label><input type="number" id="ib" value="-13" step="1"></div>
+      <div class="inp-group"><label>c</label><input type="number" id="ic" value="36" step="1"></div>
+      <button class="calc-btn" onclick="resolverCalc()">Resolver</button>
+    </div>
+    <div class="prev" id="prev"></div>
+    <div class="libro-lbl">Ejercicios del libro (Entrénate, actividad 2). Pulsa uno para cargarlo:</div>
+    <div class="libro" id="libro"></div>
+  </div>
+  <div id="calcOut"></div>
+</div>
+
+<!-- ===================== EJERCICIOS ===================== -->
+<div id="ejercicios" class="section">
+  <div class="level-nav" id="level-nav"></div>
+  <div id="level-desc" class="level-desc-bar"></div>
+  <div class="score-bar">
+    <span class="score-txt">Puntuación del nivel</span>
+    <span class="score-val" id="score-txt">0 / 10</span>
+    <button class="reset-btn" onclick="resetLevel()">Reiniciar nivel</button>
+  </div>
+  <div id="finished-banner" class="finished-banner" style="display:none">
+    <h3 id="finish-title"></h3>
+    <p id="finish-msg"></p>
+  </div>
+  <div class="exs" id="exs"></div>
+</div>
+
+</div>
+<footer>Basado en Matemáticas 4.º ESO B, Anaya (Operación Mundo), unidad 3. Reiniciar un nivel genera 10 ejercicios nuevos.</footer>
+
+<script>
+/* ============ KaTeX ============ */
+const K =t=>katex.renderToString(t,{throwOnError:false});
+const KD=t=>katex.renderToString(t,{throwOnError:false,displayMode:true});
+document.querySelectorAll('.m').forEach(e=>katex.render(e.textContent,e,{throwOnError:false}));
+document.querySelectorAll('.md').forEach(e=>katex.render(e.textContent,e,{throwOnError:false,displayMode:true}));
+
+function switchMain(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.main-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');btn.classList.add('active');
+}
+
+/* ============ utilidades ============ */
+const $=id=>document.getElementById(id);
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b]}return a||1}
+function F(n,d){if(d<0){n=-n;d=-d}const g=gcd(n,d);return{n:n/g,d:d/g}}
+const fval=f=>typeof f==='number'?f:f.n/f.d;
+const isSq=n=>n>=0&&Math.round(Math.sqrt(n))**2===n;
+const isqrt=n=>Math.round(Math.sqrt(n));
+/* número en LaTeX (coma decimal española) */
+function tn(n){
+  if(Math.abs(n)<1e-12)n=0;
+  if(Number.isInteger(n))return String(n);
+  return n.toFixed(3).replace(/0+$/,'').replace(/\.$/,'').replace('.','{,}');
+}
+const tpar=n=>n<0?`(${tn(n)})`:tn(n);
+const tfr=(a,b)=>`\\dfrac{${a}}{${b}}`;
+const tF=f=>f.d===1?tn(f.n):(f.n<0?'-':'')+tfr(Math.abs(f.n),f.d);
+function tp(terms,v='x'){
+  let o='',first=true;
+  for(const[c,e]of terms){
+    if(!c)continue;
+    const a=Math.abs(c),cs=(a===1&&e!==0)?'':String(a);
+    const vs=e===0?'':(e===1?v:`${v}^{${e}}`);
+    if(first){o+=(c<0?'-':'')+cs+vs;first=false}else o+=(c<0?' - ':' + ')+cs+vs;
+  }
+  return first?'0':o;
+}
+const tX=(a,b,c)=>tp([[a,4],[b,2],[c,0]])+' = 0';
+const tZ=(a,b,c)=>tp([[a,2],[b,1],[c,0]],'z')+' = 0';
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+
+/* raíz cuadrada de una fracción positiva, simplificada y racionalizada */
+function rootOf(f){
+  const N=f.n*f.d;let k=1,m=N;
+  for(let i=Math.floor(Math.sqrt(N));i>1;i--){if(N%(i*i)===0){k=i;m=N/(i*i);break}}
+  const g=gcd(k,f.d),kk=k/g,dd=f.d/g;
+  const core=m===1?String(kk):(kk===1?'':kk)+`\\sqrt{${m}}`;
+  return{tex:dd===1?core:tfr(core,dd),v:Math.sqrt(f.n/f.d),rational:m===1};
+}
+
+/* ============ resolución ============ */
+function solve(a,b,c){
+  const D=b*b-4*a*c,r={a,b,c,D,zs:[],zi:[],xs:[]};
+  if(D<0)return r;
+  if(isSq(D)){
+    const s=isqrt(D);r.exact=true;r.s=s;
+    const z1=F(-b+s,2*a),z2=F(-b-s,2*a);
+    r.zs=D===0?[z1]:[z1,z2];
+  }else{
+    const s=Math.sqrt(D);r.exact=false;
+    r.zs=[(-b+s)/(2*a),(-b-s)/(2*a)];
+  }
+  for(const z of r.zs){
+    const v=fval(z);
+    if(Math.abs(v)<1e-12){r.zi.push({kind:'cero'});r.xs.push({v:0,tex:'0',ok:true});continue}
+    if(v<0){r.zi.push({kind:'neg'});continue}
+    if(r.exact){
+      const R=rootOf(z);r.zi.push({kind:'pos',R});
+      r.xs.push({v:R.v,tex:R.tex,ok:R.rational});r.xs.push({v:-R.v,tex:'-'+R.tex,ok:R.rational});
+    }else{
+      const sv=Math.sqrt(v);r.zi.push({kind:'pos',sv});
+      r.xs.push({v:sv,tex:tn(sv),approx:true});r.xs.push({v:-sv,tex:tn(-sv),approx:true});
+    }
+  }
+  return r;
+}
+const blk=(t,body,cls='')=>`<div class="sol-step ${cls}"><div class="t">${t}</div>${body}</div>`;
+
+function renderSolution(a,b,c){
+  const r=solve(a,b,c);let h='';
+  /* 1. cambio */
+  let p1=`<p>Hacemos el cambio ${K('x^2 = z')}, así que ${K('x^4 = z^2')}. Queda una ecuación de segundo grado:</p>`+
+    KD(`${tX(a,b,c)} \\quad\\xrightarrow{\\;x^2\\,=\\,z\\;}\\quad ${tZ(a,b,c)}`);
+  if(c===0&&b!==0)p1+=`<p>Como falta el número, también se puede sacar factor común:</p>`+KD(`x^2\\,(${tp([[a,2],[b,0]])}) = 0`);
+  if(b===0&&c!==0)p1+=`<p>Como falta el término en ${K('x^2')}, también se puede despejar:</p>`+KD(`z^2 = ${tF(F(-c,a))}`);
+  h+=blk('1 · Cambio de variable',p1);
+  /* 2. discriminante */
+  const p=4*a*c;
+  let p2=`<p>Coeficientes de la ecuación en z: ${K(`a = ${a},\\; b = ${b},\\; c = ${c}`)}</p>`+
+    KD(`\\Delta = b^2 - 4ac = ${tpar(b)}^2 - 4\\cdot ${tpar(a)}\\cdot ${tpar(c)} = ${b*b} ${p>=0?'-':'+'} ${Math.abs(p)} = ${r.D}`);
+  if(r.D<0){
+    p2+=`<p>Como ${K('\\Delta < 0')}, la ecuación en z no tiene solución, y la bicuadrada tampoco.</p>`;
+    h+=blk('2 · Discriminante',p2);
+    h+=blk('5 · Soluciones','<p><strong>No tiene soluciones reales.</strong></p>','vacio');
+    return{html:h,r};
+  }
+  h+=blk('2 · Discriminante',p2);
+  /* 3. ecuación en z */
+  const nb=b===0?'':tn(-b)+' ';
+  const den=a===1?'2':`2\\cdot ${tpar(a)}`;
+  let p3;
+  if(r.D===0){
+    p3=KD(`z = \\dfrac{${nb}\\pm\\sqrt{0}}{${den}} = ${tF(r.zs[0])}`)+`<p>Como ${K('\\Delta = 0')}, sale un único valor de z (solución doble).</p>`;
+  }else if(r.exact){
+    p3=KD(`z = \\dfrac{${nb}\\pm\\sqrt{${r.D}}}{${den}} = \\dfrac{${nb}\\pm ${r.s}}{${2*a}}`);
+    const up=b===0?`${r.s}`:`${tn(-b)} + ${r.s}`, dn=b===0?`-${r.s}`:`${tn(-b)} - ${r.s}`;
+    p3+=KD(`z_1 = \\dfrac{${up}}{${2*a}} = ${tF(r.zs[0])} \\qquad z_2 = \\dfrac{${dn}}{${2*a}} = ${tF(r.zs[1])}`);
+  }else{
+    p3=KD(`z = \\dfrac{${nb}\\pm\\sqrt{${r.D}}}{${den}}`)+`<p>${K('\\Delta')} no es un cuadrado perfecto; damos valores aproximados:</p>`+
+      KD(`z_1 \\approx ${tn(r.zs[0])} \\qquad z_2 \\approx ${tn(r.zs[1])}`);
+  }
+  h+=blk('3 · Resolvemos la ecuación en z',p3);
+  /* 4. deshacer el cambio */
+  let p4='';
+  r.zs.forEach((z,i)=>{
+    const lab=r.zs.length===1?'z':`z_${i+1}`,info=r.zi[i],v=fval(z);
+    const zt=r.exact?tF(z):tn(v),eq=r.exact?'=':'\\approx';
+    if(info.kind==='cero')p4+=KD(`${lab} = 0 \\;\\rightarrow\\; x^2 = 0 \\;\\rightarrow\\; x = 0`);
+    else if(info.kind==='neg')p4+=KD(`${lab} ${eq} ${zt} \\;\\rightarrow\\; x^2 ${eq} ${zt}`)+`<p class="nosol">No da solución: ningún número al cuadrado da negativo.</p>`;
+    else if(r.exact){
+      const R=info.R;let s=`${lab} = ${zt} \\;\\rightarrow\\; x^2 = ${zt} \\;\\rightarrow\\; x = \\pm\\sqrt{${zt}}`;
+      if(R.tex!==`\\sqrt{${zt}}`)s+=` = \\pm ${R.tex}`;
+      if(!R.rational)s+=` \\approx \\pm ${tn(R.v)}`;
+      p4+=KD(s);
+    }else p4+=KD(`${lab} \\approx ${zt} \\;\\rightarrow\\; x = \\pm\\sqrt{${zt}} \\approx \\pm ${tn(info.sv)}`);
+  });
+  h+=blk('4 · Deshacemos el cambio',p4);
+  /* 5. soluciones */
+  if(r.xs.length===0)h+=blk('5 · Soluciones','<p><strong>No tiene soluciones reales</strong> (todos los valores de z son negativos).</p>','vacio');
+  else{
+    const lst=r.xs.map((x,i)=>`x_{${i+1}} ${x.approx?'\\approx':'='} ${x.tex}`).join(',\\quad ');
+    h+=blk('5 · Soluciones',KD(`\\text{Soluciones: }\\; ${lst}`)+`<p>Tiene <strong>${r.xs.length}</strong> ${r.xs.length>1?'soluciones':'solución'}.</p>`,'final');
+  }
+  /* 6. comprobación con una solución entera */
+  const xc=r.xs.find(x=>x.ok&&Number.isInteger(x.v)&&x.v>0)||r.xs.find(x=>x.ok&&Number.isInteger(x.v));
+  if(xc){
+    const x=xc.v,t4=a*x**4,t2=b*x*x;
+    let l=`${a===1?'':a===-1?'-':a+'\\cdot '}${tpar(x)}^4`;
+    if(b)l+=` ${b<0?'-':'+'} ${Math.abs(b)===1?'':Math.abs(b)+'\\cdot '}${tpar(x)}^2`;
+    if(c)l+=` ${c<0?'-':'+'} ${Math.abs(c)}`;
+    let v=tn(t4);
+    if(b)v+=` ${t2<0?'-':'+'} ${Math.abs(t2)}`;
+    if(c)v+=` ${c<0?'-':'+'} ${Math.abs(c)}`;
+    h+=blk('6 · Comprobación',`<p>Sustituimos ${K(`x = ${x}`)} en la ecuación del principio:</p>`+KD(`${l} = ${v} = ${tn(t4+t2+c)} \\;\\checkmark`));
+  }
+  return{html:h,r};
+}
+
+/* ============ gráfica ============ */
+function drawGraph(cv,a,b,c,xs){
+  const ctx=cv.getContext('2d'),W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+  const f=x=>a*x**4+b*x*x+c,xe=Math.sqrt(Math.abs(b/(2*a)));
+  const R=Math.max(3,xe+1.5,...xs.map(x=>Math.abs(x.v)+1.2));
+  const span=Math.max(Math.abs(f(0)),Math.abs(f(xe)),1)*1.5;
+  let yMin=-span,yMax=span;const ys=[];
+  for(let i=0;i<=400;i++)ys.push(f(-R+2*R*i/400));
+  if(Math.min(...ys)>=0)yMin=-span*.25;if(Math.max(...ys)<=0)yMax=span*.25;
+  const pad=28,X=x=>pad+(x+R)/(2*R)*(W-2*pad),Y=y=>pad+(yMax-y)/(yMax-yMin)*(H-2*pad);
+  ctx.font='13px system-ui';ctx.fillStyle='#888';ctx.strokeStyle='#efede8';ctx.lineWidth=1;
+  const stp=R>8?2:1;
+  for(let k=-Math.floor(R);k<=Math.floor(R);k+=stp){ctx.beginPath();ctx.moveTo(X(k),pad);ctx.lineTo(X(k),H-pad);ctx.stroke();if(k)ctx.fillText(k,X(k)-4,Y(0)+16)}
+  ctx.strokeStyle='#888';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad,Y(0));ctx.lineTo(W-pad,Y(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(X(0),pad);ctx.lineTo(X(0),H-pad);ctx.stroke();
+  ctx.fillText('x',W-pad+8,Y(0)+4);ctx.fillText('y',X(0)+6,pad-8);
+  ctx.save();ctx.beginPath();ctx.rect(pad,pad,W-2*pad,H-2*pad);ctx.clip();
+  ctx.strokeStyle='#534AB7';ctx.lineWidth=2.5;ctx.beginPath();
+  for(let i=0;i<=600;i++){const x=-R+2*R*i/600,y=f(x);i?ctx.lineTo(X(x),Y(y)):ctx.moveTo(X(x),Y(y))}
+  ctx.stroke();ctx.restore();
+  ctx.fillStyle='#A32D2D';
+  for(const x of xs){ctx.beginPath();ctx.arc(X(x.v),Y(0),5,0,7);ctx.fill()}
+}
+
+/* ============ calculadora ============ */
+function leeCoef(){return['ia','ib','ic'].map(id=>{const s=$(id).value.trim();return s===''?NaN:Number(s)})}
+function preview(){
+  const[a,b,c]=leeCoef();
+  $('prev').innerHTML=[a,b,c].every(Number.isInteger)&&a!==0?KD(tX(a,b,c)):'';
+}
+['ia','ib','ic'].forEach(id=>$(id).addEventListener('input',preview));
+function resolverCalc(){
+  const[a,b,c]=leeCoef(),out=$('calcOut');
+  if(![a,b,c].every(Number.isInteger)){out.innerHTML='<div class="card err">Escribe números enteros en a, b y c.</div>';return}
+  if(a===0){out.innerHTML='<div class="card err">a no puede ser 0: si no hay x⁴, no es bicuadrada.</div>';return}
+  if([a,b,c].some(n=>Math.abs(n)>9999)){out.innerHTML='<div class="card err">Usa números más pequeños (hasta 9999).</div>';return}
+  const{html,r}=renderSolution(a,b,c);
+  out.innerHTML=`<div class="card"><h2>Resolución</h2>${html}</div>
+  <div class="card"><h2>Gráfica de ${K('y = '+tp([[a,4],[b,2],[c,0]]))}</h2>
+  <p style="font-size:13px;color:#666">Las soluciones son los puntos donde la curva corta al eje X (en rojo).</p>
+  <canvas id="cv" width="680" height="320"></canvas></div>`;
+  drawGraph($('cv'),a,b,c,r.xs);
+}
+const LIBRO=[['a',1,-5,4],['b',1,3,-4],['c',1,5,4],['d',1,-25,0],['e',1,-3,4]];
+$('libro').innerHTML=LIBRO.map(([l,a,b,c],i)=>`<button onclick="cargaLibro(${i})">${l}) ${K(tX(a,b,c))}</button>`).join('');
+function cargaLibro(i){const[,a,b,c]=LIBRO[i];$('ia').value=a;$('ib').value=b;$('ic').value=c;preview();resolverCalc()}
+preview();
+
+/* ============ ejercicios: generadores ============ */
+const SQ=[1,4,9,16,25,36,49];
+function dos(arr){const a=pick(arr);let b;do{b=pick(arr)}while(b===a);return[a,b]}
+const fromZ=(a,z1,z2)=>({a,b:-a*(z1+z2),c:a*z1*z2});
+function genN2(){const[z1,z2]=dos(SQ);return fromZ(1,z1,z2)}
+function genN3(t){
+  switch(t){
+    case 0:return fromZ(1,pick([1,4,9,16,25]),-pick([1,2,3,4,5,9]));
+    case 1:return fromZ(1,-pick([1,2,3,4]),-pick([5,6,8,9]));
+    case 2:return fromZ(pick([1,1,2]),0,pick([1,4,9,16,25,-1,-4,-9]));
+    case 3:{const[z1,z2]=dos([1,4,9,16]);return fromZ(pick([2,3,-1]),z1,z2)}
+    default:{const a=pick([1,1,2]);const z=pick(a===1?[1,4,9,16,25]:[1,4,9]);return fromZ(a,z,-z)}
+  }
+}
+const okFig=n=>n===1?'':String(n);
+function genN1(t){
+  if(t===0){
+    const b=pick([-5,-3,2,4,-10]),c=pick([4,-9,6,-2]);
+    const casos=[
+      {t:[[1,4],[b,2],[c,0]],si:true,ex:`Solo tiene ${K('x^4')}, ${K('x^2')} y número.`},
+      {t:[[pick([2,3]),4],[c,0]],si:true,ex:`Le falta el término en ${K('x^2')}, pero sigue siendo bicuadrada.`},
+      {t:[[1,4],[b,2]],si:true,ex:'Le falta el número, pero sigue siendo bicuadrada.'},
+      {t:[[1,4],[b,3],[c,0]],si:false,ex:`Tiene ${K('x^3')}, que es de grado impar.`},
+      {t:[[1,4],[b,2],[pick([2,-3]),1],[c,0]],si:false,ex:`Tiene un término en ${K('x')}, que es de grado impar.`},
+      {t:[[1,6],[b,3],[c,0]],si:false,ex:`Tiene ${K('x^6')} y ${K('x^3')}: no es bicuadrada (aunque se resolvería con un cambio parecido, ${K('x^3 = z')}).`}
+    ];
+    const k=pick(casos);
+    return{q:`¿Es bicuadrada esta ecuación?`+KD(tp(k.t)+' = 0'),ops:['Sí, es bicuadrada','No es bicuadrada'],ok:k.si?0:1,ex:k.ex};
+  }
+  if(t===1){
+    const a=pick([1,1,2,3]),b=pick([-13,-5,-10,3,-26,7]),c=pick([36,4,9,-4,25,-18]);
+    const okT=tZ(a,b,c);
+    const ops=shuffle([okT,tp([[a,4],[b,2],[c,0]],'z')+' = 0',tp([[a,1],[b,2],[c,0]],'z')+' = 0',tp([[a,2],[b,1],[-c,0]],'z')+' = 0']);
+    return{q:`Haz el cambio ${K('x^2 = z')} en`+KD(tX(a,b,c))+`¿Qué ecuación queda?`,ops:ops.map(K),ok:ops.indexOf(okT),
+      ex:`${K('x^4')} pasa a ser ${K('z^2')}, ${K('x^2')} pasa a ser ${K('z')} y el número no cambia: ${K(okT)}`};
+  }
+  if(t===2){
+    const k=pick([1,4,9,16,25,36,0,-4,-9,-16]);let ops,okT,ex;
+    if(k>0){const r=isqrt(k);okT=`x = ${r}\\;\\text{ y }\\;x = -${r}`;ops=[okT,`x = ${r}`,`x = ${k}\\;\\text{ y }\\;x = -${k}`,'\\text{No hay solución}'];ex=K(`x^2 = ${k} \\;\\rightarrow\\; x = \\pm\\sqrt{${k}} = \\pm ${r}`)+'. No olvides la negativa.'}
+    else if(k===0){okT='x = 0';ops=[okT,'\\text{No hay solución}','x = 1\\;\\text{ y }\\;x = -1','x = 0\\;\\text{ y }\\;x = 1'];ex=`${K('x^2 = 0')} solo se cumple para ${K('x = 0')}.`}
+    else{const r=isqrt(-k);okT='\\text{No hay solución}';ops=[okT,`x = ${r}\\;\\text{ y }\\;x = -${r}`,`x = -${r}`,`x = ${-k}`];ex=`${K(`x^2 = ${k}`)} es imposible: ningún número al cuadrado da negativo.`}
+    shuffle(ops);
+    return{q:`Al resolver la ecuación en z te ha salido ${K(`z = ${k}`)}. ¿Qué valores de x da?`,ops:ops.map(K),ok:ops.indexOf(okT),ex};
+  }
+  const[z1,z2]=dos([4,9,16,25,0,-1,-4,-9]);
+  const cnt=[z1,z2].reduce((s,z)=>s+(z>0?2:z===0?1:0),0);
+  const desc=z=>z>0?`${K(`z = ${z}`)} da 2`:z===0?`${K('z = 0')} da 1`:`${K(`z = ${z}`)} no da ninguna`;
+  return{q:`Al resolver una bicuadrada salen ${K(`z_1 = ${z1}`)} y ${K(`z_2 = ${z2}`)}. ¿Cuántas soluciones tiene la ecuación?`,
+    ops:['0','1','2','3','4'],ok:cnt,ex:`${desc(z1)} y ${desc(z2)}: en total, ${cnt}.`};
+}
+const xp=p=>`x^2 ${p<0?'-':'+'} ${Math.abs(p)}`;
+function genN4(t){
+  for(;;){
+    const e=t%2===0?genN2():genN3(rnd(0,4));
+    if(Math.abs(e.c)>400)continue;
+    const fs=[];if(e.b&&e.c)fs.push(1,2);if(e.b||e.c)fs.push(4);if(e.a===1)fs.push(3,3);
+    const f=pick(fs),fin=KD(tX(e.a,e.b,e.c));let q,orden;
+    if(f===1){q=`${tp([[e.a,4],[e.c,0]])} = ${tp([[-e.b,2]])}`;orden=`<p>Pasamos el término en ${K('x^2')} al primer miembro (cambia de signo):</p>`+fin}
+    else if(f===2){q=`x^2\\,(${tp([[e.a,2],[e.b,0]])}) = ${-e.c}`;orden=`<p>Quitamos el paréntesis (propiedad distributiva) y pasamos el número al primer miembro:</p>`+KD(`${tp([[e.a,4],[e.b,2]])} = ${-e.c}`)+fin}
+    else if(f===4){q=`${tp([[e.a,4]])} = ${tp([[-e.b,2],[-e.c,0]])}`;orden=`<p>Pasamos todo al primer miembro, cambiando de signo lo que cambia de lado:</p>`+fin}
+    else{
+      const p=pick([-4,-3,-2,-1,1,2,3,4,5]),qq=e.b-p;if(!qq)continue;
+      const rr=p*qq-e.c;
+      q=`(${xp(p)})\\,(${xp(qq)}) = ${rr}`;
+      orden=`<p>Multiplicamos los paréntesis:</p>`+KD(`${tp([[1,4],[p+qq,2],[p*qq,0]])} = ${rr}`)+`<p>Y pasamos el ${K(String(rr))} al primer miembro:</p>`+fin;
+    }
+    return{...e,q,orden};
+  }
+}
+
+/* ============ ejercicios: estado y pintado ============ */
+const LV=[
+  {icon:'🌱',name:'Aprendiz',desc:`<strong>Nivel 1 · Aprendiz 🌱</strong> — Preguntas cortas: reconocer bicuadradas, hacer el cambio ${K('x^2 = z')}, deshacerlo y contar soluciones.`},
+  {icon:'🔭',name:'Explorador',desc:`<strong>Nivel 2 · Explorador 🔭</strong> — Resuelve paso a paso: ${K('\\Delta')}, los dos valores de z y las soluciones. Aquí las z salen positivas.`},
+  {icon:'🔍',name:'Detective',desc:`<strong>Nivel 3 · Detective 🔍</strong> — Paso a paso, pero ojo: pueden salir z negativas o ${K('z = 0')}, faltar términos o ser ${K('a \\neq 1')}.`},
+  {icon:'🏆',name:'Maestro',desc:`<strong>Nivel 4 · Maestro 🏆</strong> — Las ecuaciones vienen desordenadas. Iguala a 0 en tu cuaderno, resuelve y escribe solo las soluciones.`}
+];
+let cur=0;const est=[null,null,null,null];
+function nuevoNivel(l){
+  const exs=[];
+  if(l===0){const tipos=shuffle([0,0,1,1,2,2,2,3,3,3]);tipos.forEach(t=>exs.push(genN1(t)))}
+  else if(l===1){for(let i=0;i<10;i++){let e;do{e=genN2()}while(exs.some(x=>x.b===e.b&&x.c===e.c));exs.push(e)}}
+  else if(l===2){shuffle([0,0,1,2,2,3,3,4,4,0]).forEach(t=>exs.push(genN3(t)))}
+  else for(let i=0;i<10;i++)exs.push(genN4(i));
+  if(l>0)exs.forEach(e=>e.r=solve(e.a,e.b,e.c));
+  est[l]={exs,ans:new Array(10).fill(null),sc:0};
+}
+function pintaNav(){
+  $('level-nav').innerHTML=LV.map((v,i)=>`<button class="level-btn ${i===cur?'active':''}" onclick="switchLevel(${i})"><span class="lv-icon">${v.icon}</span><span class="lv-name">${v.name}</span><span class="lv-sub">Nivel ${i+1}</span></button>`).join('');
+}
+function switchLevel(i){cur=i;if(!est[i])nuevoNivel(i);pintaNav();renderEx()}
+function resetLevel(){nuevoNivel(cur);renderEx()}
+function renderEx(){
+  const s=est[cur];
+  $('level-desc').innerHTML=LV[cur].desc;
+  $('exs').innerHTML=s.exs.map((_,i)=>`<div class="ex-card" id="ex${i}"></div>`).join('');
+  s.exs.forEach((_,i)=>pintaCard(i));
+  marcador();
+}
+function marcador(){
+  const s=est[cur];$('score-txt').textContent=s.sc+' / 10';
+  const banner=$('finished-banner');
+  if(s.ans.every(a=>a!==null)){
+    banner.style.display='block';const pct=s.sc*10;
+    const em=pct>=90?'🌟':pct>=70?'👍':pct>=50?'💪':'📚';
+    $('finish-title').textContent=`${em} ${s.sc} de 10 correctas (${pct}%)`;
+    const m=['Repasa la teoría e inténtalo de nuevo.','Buen comienzo, sigue practicando.','Bien hecho, repasa los errores.','Muy bien, casi perfecto.','¡Perfecto! Dominas las bicuadradas.'];
+    $('finish-msg').textContent=m[Math.min(Math.floor(s.sc/2),4)]+' Pulsa «Reiniciar nivel» para hacer 10 nuevos.';
+  }else banner.style.display='none';
+}
+function cabecera(i,a){
+  let h=`<div class="ex-head"><span class="ex-num">Ejercicio ${i+1}/10</span>`;
+  if(a)h+=`<span class="badge ${a.ok?'badge-ok':'badge-fail'}">${a.ok?'✓ Correcto':'✗ Incorrecto'}</span>`;
+  return h+'</div>';
+}
+function pintaCard(i){
+  const s=est[cur],e=s.exs[i],a=s.ans[i],box=$('ex'+i);
+  let h=cabecera(i,a);
+  if(cur===0){
+    h+=`<div class="ex-q">${e.q}</div><div class="ex-opts">`;
+    e.ops.forEach((o,j)=>{
+      let cls='opt-btn';if(a)cls+=' '+(j===e.ok?'correct':j===a.v?'wrong':'disabled');
+      h+=`<button class="${cls}" onclick="respN1(${i},${j})">${o}</button>`;
+    });
+    h+='</div>';
+    if(a)h+=`<div class="ex-feedback ${a.ok?'ok':'fail'}">${a.ok?'¡Correcto! ':'No es esa. '}${e.ex}</div>`;
+    box.innerHTML=h;return;
+  }
+  const v=a?a.vals:{},dis=a?'disabled':'';
+  const cls=k=>a?(a.marks[k]?'ok':'bad'):'';
+  if(cur<3){
+    h+=`<div class="ex-q">Resuelve:</div>`+KD(tX(e.a,e.b,e.c));
+    h+=`<div class="paso"><span class="pl">Paso 1</span>${K(`x^2 = z \\;\\rightarrow\\; ${tZ(e.a,e.b,e.c)}`)} <span class="muted">(hecho)</span></div>`;
+    h+=`<div class="paso"><span class="pl">Paso 2</span>${K('\\Delta =')} <input id="iD${i}" class="${cls('D')}" value="${esc(v.D||'')}" ${dis} inputmode="text"></div>`;
+    h+=`<div class="paso"><span class="pl">Paso 3</span>${K('z_1 =')} <input id="iZ1${i}" class="${cls('Z')}" value="${esc(v.z1||'')}" ${dis}> ${K('z_2 =')} <input id="iZ2${i}" class="${cls('Z')}" value="${esc(v.z2||'')}" ${dis}> <span class="muted">si solo sale una, repítela</span></div>`;
+  }else{
+    h+=`<div class="ex-q">Resuelve en tu cuaderno:</div>`+KD(e.q);
+  }
+  h+=`<div class="paso"><span class="pl">${cur<3?'Paso 4':'Soluciones'}</span><input id="iX${i}" class="w ${cls('X')}" value="${esc(v.x||'')}" ${dis} placeholder="por ejemplo: 3, -3, 2, -2"></div>`;
+  h+=`<div class="muted" style="margin-top:4px">Escribe las soluciones de x separadas por comas. Si no tiene, escribe «ninguna».</div>`;
+  if(!a){
+    const pista=cur<3
+      ?`${K(`a = ${e.a},\\; b = ${e.b},\\; c = ${e.c}`)} &nbsp;→&nbsp; ${K('\\Delta = b^2 - 4ac')}, &nbsp;${K('z = \\dfrac{-b \\pm \\sqrt{\\Delta}}{2a}')}, &nbsp;${K('x = \\pm\\sqrt{z}')}`
+      :`Ordenada queda: ${K(tX(e.a,e.b,e.c))}`;
+    h+=`<div class="ex-actions"><button class="chk-btn" onclick="comprobar(${i})">Comprobar</button><button class="hint-btn" onclick="toggleBox(this,'hint${i}','Ver pista','Ocultar pista')">Ver pista</button></div>`;
+    h+=`<div class="hint-box" id="hint${i}">${pista}</div>`;
+  }else{
+    h+=`<div class="ex-feedback ${a.ok?'ok':'fail'}">${a.msg}</div>`;
+    h+=`<div class="ex-actions"><button class="hint-btn" onclick="toggleBox(this,'sol${i}','Ver resolución completa','Ocultar resolución')">Ver resolución completa</button></div>`;
+    h+=`<div class="sol-box" id="sol${i}">${e.orden?blk('0 · Ordenamos la ecuación',e.orden):''}${renderSolution(e.a,e.b,e.c).html}</div>`;
+  }
+  box.innerHTML=h;
+}
+function toggleBox(btn,id,t1,t2){const b=$(id);b.classList.toggle('show');btn.textContent=b.classList.contains('show')?t2:t1}
+function respN1(i,j){
+  const s=est[cur];if(s.ans[i])return;
+  const ok=j===s.exs[i].ok;s.ans[i]={v:j,ok};if(ok)s.sc++;
+  pintaCard(i);marcador();
+}
+
+/* ============ corrección ============ */
+const num=s=>{s=s.replace(/[−–]/g,'-').replace(',','.').trim();if(s==='')return null;if(/^-?\d+\/\d+$/.test(s)){const[p,q]=s.split('/');return p/q}const n=Number(s);return isNaN(n)?'err':n};
+function parseSols(str){
+  let s=str.toLowerCase().trim();
+  if(!s)return null;
+  if(/ningun|no tiene|no hay|^∅$|^no$/.test(s))return[];
+  s=s.replace(/[−–]/g,'-').replace(/\+\s*-|\+\/-/g,'±').replace(/x\s*[₁₂₃₄0-9]*\s*=/g,' ');
+  const out=[];
+  for(let t of s.split(/[;,\s]+|\by\b/).filter(Boolean)){
+    let pm=false;if(t.startsWith('±')){pm=true;t=t.slice(1)}
+    const n=Number(t);if(t===''||isNaN(n))return'err';
+    out.push(n);if(pm)out.push(-n);
+  }
+  return[...new Set(out)];
+}
+const setEq=(u,e)=>u.length===e.length&&e.every(x=>u.some(y=>Math.abs(y-x)<1e-9));
+const expX=r=>[...new Set(r.xs.map(x=>Math.round(x.v)))];
+function pistaX(u,r){
+  const exp=expX(r),zs=[...new Set(r.zs.map(fval))];
+  if(u===null)return'Te falta escribir las soluciones (o «ninguna»).';
+  if(u==='err')return'No se entiende lo que has escrito en las soluciones. Pon números separados por comas, por ejemplo: 3, -3, 2, -2.';
+  if(setEq(u,zs)&&!setEq(u,exp))return`Has dado los valores de z. Falta deshacer el cambio: ${K('x = \\pm\\sqrt{z}')}.`;
+  if(u.length&&u.length<exp.length&&u.every(x=>exp.includes(x)))
+    return exp.some(x=>x<0&&!u.includes(x))?`Te faltan las negativas. Recuerda el ${K('\\pm')}: si ${K('x^2 = 9')}, entonces ${K('x = 3')} y ${K('x = -3')}.`:'Te falta alguna solución.';
+  if(zs.some(z=>z<0)&&u.some(x=>!exp.includes(x)))return`Cuidado: si una z es negativa, ${K('x^2 = z')} no tiene solución. Esa z no da valores de x.`;
+  if(exp.length===0)return'Si todos los valores de z son negativos, no hay soluciones: había que escribir «ninguna».';
+  return`Revisa las soluciones: cada z positiva da dos (${K('\\pm\\sqrt{z}')}), ${K('z = 0')} da ${K('x = 0')} y una z negativa no da ninguna.`;
+}
+function comprobar(i){
+  const s=est[cur],e=s.exs[i],r=e.r;
+  const vals={x:$('iX'+i).value},marks={},msgs=[];
+  if(cur<3){
+    vals.D=$('iD'+i).value;vals.z1=$('iZ1'+i).value;vals.z2=$('iZ2'+i).value;
+    const D=num(vals.D);marks.D=D===r.D;
+    if(!marks.D){
+      let m=`${K('\\Delta')} no es correcto: ${K(`\\Delta = b^2 - 4ac`)} con ${K(`a = ${e.a},\\; b = ${e.b},\\; c = ${e.c}`)}.`;
+      if(D===e.b*e.b+4*e.a*e.c&&e.a*e.c!==0)m=`${K('\\Delta')}: revisa el signo, es ${K('b^2')} <strong>menos</strong> ${K('4ac')}.`;
+      else if(D===-(e.b*e.b)-4*e.a*e.c&&e.b!==0)m=`${K('\\Delta')}: ojo, ${K(`${tpar(e.b)}^2`)} es positivo.`;
+      msgs.push('✗ '+m);
+    }else msgs.push(`✓ ${K(`\\Delta = ${r.D}`)}`);
+    const z1=num(vals.z1),z2=num(vals.z2),ez=r.zs.map(fval);if(ez.length===1)ez.push(ez[0]);
+    const near=(p,q)=>typeof p==='number'&&Math.abs(p-q)<1e-9;
+    marks.Z=(near(z1,ez[0])&&near(z2,ez[1]))||(near(z1,ez[1])&&near(z2,ez[0]));
+    msgs.push(marks.Z?`✓ ${K(`z_1 = ${tF(r.zs[0])},\\; z_2 = ${tF(r.zs[r.zs.length-1])}`)}`
+      :`✗ Los valores de z no son correctos. Usa ${K('z = \\dfrac{-b \\pm \\sqrt{\\Delta}}{2a}')} y cuidado con ${K('-b')}: cambia el signo de b.`);
+  }
+  const u=parseSols(vals.x);marks.X=Array.isArray(u)&&setEq(u,expX(r));
+  msgs.push(marks.X?'✓ Soluciones correctas.':'✗ '+pistaX(u,r));
+  const ok=Object.values(marks).every(Boolean);
+  if(ok)s.sc++;
+  s.ans[i]={ok,vals,marks,msg:(ok?'<strong>¡Todo correcto!</strong><br>':'')+msgs.join('<br>')};
+  pintaCard(i);marcador();
+}
+switchLevel(0);
+</script>
+</body>
+</html>
